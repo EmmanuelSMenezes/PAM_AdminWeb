@@ -1,0 +1,171 @@
+# Deploy to Azure Kubernetes Service
+# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+      - 'development'
+
+resources:
+  - repo: self
+
+variables:
+  
+  # Environment settings
+  - name: environment
+    value: 'development'
+
+  # Pipeline Library variable group import
+  - group: AWS_CREDENTIALS
+  - group: PAM_Admin_Web - Development
+  - group: Applications Base URL - Development
+  - group: Google Cloud Platform - Development
+    
+  # Services connections defined in Azure
+  - name: awsRegion
+    value: $(AWS_REGION)
+  - name: awsAccountId
+    value: $(AWS_ACCOUNT_ID)
+  - name: awsAccessKeyId
+    value: $(AWS_ACCESS_KEY_ID)
+  - name: awsSecretAccessKeyId
+    value: $(AWS_SECRET_ACCESS_KEY_ID)
+  - name: dockerRepository
+    value: '904233120938.dkr.ecr.us-east-1.amazonaws.com/pam/pam_admin_web'
+  - name: ssh-service-connection
+    value: 'SSH PAM'
+  
+  # Container name
+  - name: containerName
+    value: 'pam_admin_web_container'
+
+  # Environment settings defined in Pipeline Library variable group
+  - name: cfg_http_port
+    value: $(HTTP_PORT)
+
+  - name: cfg_https_port
+    value: $(HTTPS_PORT)
+    
+
+  # Base URL's
+  - name: ms_auth_ip_address
+    value: $(BASE_URL_MS_AUTHENTICATION)
+
+  - name: ms_partner_ip_address
+    value: $(BASE_URL_MS_PARTNER)
+
+  - name: ms_catalog_ip_address
+    value: $(BASE_URL_MS_CATALOG)
+
+  - name: ms_logistics_ip_address
+    value: $(BASE_URL_MS_LOGISTICS)
+
+  - name: ms_billing_ip_address
+    value: $(BASE_URL_MS_BILLING)
+
+  - name: ms_order_ip_address
+    value: $(BASE_URL_MS_ORDER)
+
+  - name: ms_communication_ip_address
+    value: $(BASE_URL_MS_COMMUNICATION)
+
+  # GCP
+  - name: cfg_google_api_key
+    value: $(GOOGLE_API_KEY)
+
+  # Enviroment
+  - name: node_env
+    value: $(NODE_ENV)
+
+  # Build definitions
+  - name: tag
+    value: $(Build.BuildId)
+
+  # Agent VM image name
+  - name: vmImageName
+    value: 'ubuntu-latest'
+
+stages:
+
+ # - stage: PrintVariables
+ #   displayName: 'Printing Variables'
+ #   jobs: 
+ #     - job: Test
+ #       steps:
+ #       - script: echo Running $(cfg_name) application pipeline
+ #       - script: echo Enviroment ${{ variables.environment }}
+
+  - stage: Build
+    displayName: Build Stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+        - script: |
+            aws ecr get-login-password --region $(awsRegion) | docker login --username AWS --password-stdin $(awsAccountId).dkr.ecr.$(awsRegion).amazonaws.com
+          displayName: 'Login to AWS'
+          env:
+            AWS_ACCESS_KEY_ID: $(awsAccessKeyId)
+            AWS_SECRET_ACCESS_KEY: $(awsSecretAccessKeyId)
+
+        - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+          displayName: 'Replace tokens in Enviroment File'
+          inputs:
+            rootDirectory: $(Build.sourcesdirectory)
+            targetFiles: .env.production
+            escapeType: none
+            keepToken: true
+            tokenPrefix: __
+            tokenSuffix: __
+
+        - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+          displayName: 'Replace tokens in Dockerfile'
+          inputs:
+            rootDirectory: $(Build.sourcesdirectory)
+            targetFiles: Dockerfile
+            escapeType: none
+            keepToken: true
+            tokenPrefix: ____
+            tokenSuffix: ____
+
+        - task: Docker@2
+          displayName: Build and push an image to container registry
+          inputs:           
+            repository: $(dockerRepository)
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: |
+              $(tag)
+              latest
+                
+  - stage: Deploy
+    displayName: Deploy Over SSH
+    dependsOn: Build
+    jobs:
+      - job: Deploy
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: SSH@0
+            inputs:
+              sshEndpoint: $(ssh-service-connection)
+              runOptions: inline
+              inline: |
+                aws ecr get-login-password --region $(awsRegion) | docker login --username AWS --password-stdin $(awsAccountId).dkr.ecr.$(awsRegion).amazonaws.com
+                container=$(docker ps -a | grep $(containerName))
+                echo "Container: $container"
+                echo "Tag: $(tag)"
+                if [ -z "$container" ];
+                then
+                        echo "Container $(containerName) not exists"
+                        docker run --mount type=bind,src=/opt/certs/gasinho,dst=/https -p $(cfg_http_port):$(cfg_http_port) -p $(cfg_https_port):$(cfg_https_port) --name $(containerName) --restart=unless-stopped -d $(dockerRepository):$(tag)
+                        docker image prune -a --force 2>/dev/null
+                else
+                        echo "Container exists: '$container'"
+                        docker rm $(containerName) --force && sleep 10s && docker run --mount type=bind,src=/opt/certs/gasinho,dst=/https -p $(cfg_http_port):$(cfg_http_port) -p $(cfg_https_port):$(cfg_https_port) --name $(containerName) --restart=unless-stopped -d $(dockerRepository):$(tag)
+                        docker image prune -a --force 2>/dev/null
+                fi             
+              failOnStdErr: false

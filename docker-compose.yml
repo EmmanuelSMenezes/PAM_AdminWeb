@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  react_pam_admin:
+    build:
+        context: ./
+        dockerfile: ./Dockerfile
+    ports:
+      - 8080:80
+    image: react_pam_admin
+    container_name: react_pam_admin_container
