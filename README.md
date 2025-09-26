@@ -1,4 +1,4 @@
-# PAM_AdminWeb
+# 🌐 PAM_AdminWeb
 
 <div align="center">
 
@@ -7,131 +7,124 @@
 [![Material-UI](https://img.shields.io/badge/Material--UI-5.0-0081CB?style=for-the-badge&logo=material-ui)](https://mui.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
 
-**Aplicacao web moderna e responsiva para a Plataforma PAM**
+**Aplicação web moderna e responsiva para a Plataforma PAM**
 
-[Demo](#demo) â€¢ [Documentacao](#documentacao) â€¢ [Instalacao](#instalacao) â€¢ [Contribuicao](#contribuicao)
+[🚀 Demo](#demo) • [📖 Documentação](#documentacao) • [🛠️ Instalação](#instalacao) • [🤝 Contribuição](#contribuicao)
 
 </div>
 
 ---
 
-## Sobre o Projeto
+## 📋 Sobre o Projeto
 
-Dashboard administrativo completo da plataforma PAM. Interface moderna e intuitiva para gestao de usuarios, parceiros, pedidos, relatorios financeiros, configuracoes do sistema, monitoramento em tempo real e analytics avancados. Desenvolvido com Next.js 13, TypeScript e Material-UI para proporcionar uma experiencia administrativa profissional e eficiente.
+**Dashboard administrativo completo** da plataforma PAM. Interface moderna e intuitiva para gestão de usuários, parceiros, pedidos, relatórios financeiros, configurações do sistema, monitoramento em tempo real e analytics avançados. Desenvolvido com Next.js 13, TypeScript e Material-UI para proporcionar uma experiência administrativa profissional e eficiente.
 
-### Principais Funcionalidades
+### 🎯 Principais Funcionalidades
 
-- **Gestao de Usuarios**: CRUD completo, roles e permissoes
-- **Gestao de Parceiros**: Cadastro, aprovacao e monitoramento
-- **Gestao de Pedidos**: Acompanhamento e controle de status
-- **Relatorios Financeiros**: Dashboards e metricas de receita
-- **Configuracoes**: Parametros do sistema e customizacoes
-- **Analytics**: Metricas de performance e KPIs
-- **Notificacoes**: Centro de alertas e comunicacoes
-- **Auditoria**: Logs de acoes e seguranca
-- **Responsivo**: Interface adaptavel a todos dispositivos
-- **Tema Escuro**: Modo claro/escuro personalizavel
+- 👥 **Gestão de Usuários**: CRUD completo, roles e permissões
+- 🏢 **Gestão de Parceiros**: Cadastro, aprovação e monitoramento
+- 📋 **Gestão de Pedidos**: Acompanhamento e controle de status
+- 💰 **Relatórios Financeiros**: Dashboards e métricas de receita
+- ⚙️ **Configurações**: Parâmetros do sistema e customizações
+- 📊 **Analytics**: Métricas de performance e KPIs
+- 🔔 **Notificações**: Centro de alertas e comunicações
+- 🛡️ **Auditoria**: Logs de ações e segurança
+- 📱 **Responsivo**: Interface adaptável a todos dispositivos
+- 🌙 **Tema Escuro**: Modo claro/escuro personalizável
 
-## Tecnologias
+## 🚀 Tecnologias
 
 ### Frontend Framework
 - **[Next.js 13](https://nextjs.org/)** - Framework React com SSR/SSG
 - **[React 18](https://reactjs.org/)** - Biblioteca de interface
-- **[TypeScript](https://www.typescriptlang.org/)** - Tipagem estatica
+- **[TypeScript](https://www.typescriptlang.org/)** - Tipagem estática
 
 ### UI/UX
 - **[Material-UI (MUI)](https://mui.com/)** - Biblioteca de componentes
 - **[Emotion](https://emotion.sh/)** - CSS-in-JS
-- **[React Hook Form](https://react-hook-form.com/)** - Gerenciamento de formularios
+- **[React Hook Form](https://react-hook-form.com/)** - Gerenciamento de formulários
 
-## Pre-requisitos
+## 📦 Pré-requisitos
 
-- **[Node.js 18+](https://nodejs.org/)** (versao LTS recomendada)
+- **[Node.js 18+](https://nodejs.org/)** (versão LTS recomendada)
 - **[Yarn](https://yarnpkg.com/)** ou **[npm](https://www.npmjs.com/)** (gerenciador de pacotes)
-- **[Git](https://git-scm.com/)** (controle de versao)
+- **[Git](https://git-scm.com/)** (controle de versão)
 
-## Instalacao
+## 🛠️ Instalação
 
-### 1. Clone o Repositorio
+### 1️⃣ Clone o Repositório
 
-`ash
+```bash
 git clone https://github.com/EmmanuelSMenezes/PAM_AdminWeb.git
 cd PAM_AdminWeb
-`
+```
 
-### 2. Instalar Dependencias
+### 2️⃣ Instalar Dependências
 
-`ash
+```bash
 # Usando Yarn (recomendado)
 yarn install
 
 # Ou usando npm
 npm install
-`
+```
 
-### 3. Configuracao do Ambiente
+### 3️⃣ Configuração do Ambiente
 
-`ash
+```bash
 cp .env.example .env.local
-`
+```
 
-### 4. Executar em Desenvolvimento
+### 4️⃣ Executar em Desenvolvimento
 
-`ash
+```bash
 yarn dev
 # ou
 npm run dev
-`
+```
 
-### 5. Verificar Instalacao
+### 5️⃣ Verificar Instalação
 
-Acesse http://localhost:8026 para ver a aplicacao rodando.
+Acesse `http://localhost:8026` para ver a aplicação rodando.
 
-## Docker
+## 🐳 Docker
 
-`ash
+```bash
 # Build
 docker build -t pam_adminweb .
 
 # Run
 docker run -p 8026:8026 pam_adminweb
-`
+```
 
-## Build de Producao
+## 🧪 Testes
 
-`ash
-yarn build
-yarn start
-`
-
-## Testes
-
-`ash
+```bash
 yarn test
-`
+```
 
-## Contribuicao
+## 🤝 Contribuição
 
 1. Fork o projeto
-2. Crie uma branch (git checkout -b feature/nova-funcionalidade)
-3. Commit suas mudancas (git commit -m 'feat: nova funcionalidade')
-4. Push para a branch (git push origin feature/nova-funcionalidade)
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'feat: nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
 5. Abra um Pull Request
 
-## Licenca
+## 📄 Licença
 
-Este projeto esta sob a licenca **MIT**. Veja [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença **MIT**. Veja [LICENSE](LICENSE) para mais detalhes.
 
-## Suporte
+## 🆘 Suporte
 
-- **Email**: suporte@pam.com
-- **Issues**: [GitHub Issues](https://github.com/EmmanuelSMenezes/PAM_AdminWeb/issues)
+- **📧 Email**: suporte@pam.com
+- **🐛 Issues**: [GitHub Issues](https://github.com/EmmanuelSMenezes/PAM_AdminWeb/issues)
 
 ---
 
 <div align="center">
 
-**PAM - Plataforma de Agendamento de Manutencao**  
-*Desenvolvido com amor pela equipe PAM*
+**PAM - Plataforma de Agendamento de Manutenção**
+*Desenvolvido com ❤️ pela equipe PAM*
 
 </div>
